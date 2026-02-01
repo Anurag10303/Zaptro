@@ -6,41 +6,43 @@ import { ChevronLeft } from "lucide-react";
 import ProductListView from "../components/ProductListView";
 
 const CategoryProduct = () => {
-  const [searchData, setSearchData] = useState([]);
-  const params = useParams();
-  const category = params.category;
+  const [products, setProducts] = useState([]);
+  const { category } = useParams();
   const navigate = useNavigate();
-  const filterData = async () => {
+
+  const fetchCategoryProducts = async () => {
     try {
       const res = await axios.get(
-        `https://fakestoreapi.in/api/products/category?type=${category}`
+        `https://dummyjson.com/products/category/${category}`,
       );
-      const data = res.data.products;
-      setSearchData(data);
+      setProducts(res.data.products); // ✅ correct
     } catch (error) {
-      console.log(error);
+      console.error("Failed to fetch category products:", error);
     }
   };
+
   useEffect(() => {
-    filterData();
+    fetchCategoryProducts();
     window.scrollTo(0, 0);
-  }, []);
+  }, [category]);
+
   return (
     <div>
-      {searchData.length > 0 ? (
-        <div className=" max-w-6xl mx-auto mt-10 mb-10 px-4">
+      {products.length > 0 ? (
+        <div className="max-w-6xl mx-auto mt-10 mb-10 px-4">
           <button
-            className=" bg-gray-800 text-white rounded-md cursor-pointer mb-5 px-3 py-1 flex gap-1 items-center"
+            className="bg-gray-800 text-white rounded-md cursor-pointer mb-5 px-3 py-1 flex gap-1 items-center"
             onClick={() => navigate("/")}
           >
             <ChevronLeft /> Back
           </button>
-          {searchData.map((product, index) => {
-            return <ProductListView key={index} product={product} />;
-          })}
+
+          {products.map((product) => (
+            <ProductListView key={product.id} product={product} />
+          ))}
         </div>
       ) : (
-        <div className=" flex items-center justify-center h-[400px]">
+        <div className="flex items-center justify-center h-[400px]">
           <video muted autoPlay loop>
             <source src={loading} type="video/webm" />
           </video>
