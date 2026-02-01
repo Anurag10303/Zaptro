@@ -1,5 +1,6 @@
 import React from "react";
 import { getData } from "../context/DataContext";
+import { useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
@@ -8,6 +9,7 @@ import Category from "./Category";
 
 const Carousel = () => {
   const { data } = getData();
+  const navigate = useNavigate(); // ✅ add this
 
   const SamplePrevArrow = ({ className, style, onClick }) => (
     <div
@@ -79,7 +81,12 @@ const Carousel = () => {
                 <p className="md:w-[500px] line-clamp-3 text-gray-400 pr-7">
                   {item.description}
                 </p>
-                <button className="bg-gradient-to-r from-red-500 to-purple-500 text-white px-3 py-2 rounded-md cursor-pointer mt-2">
+
+                {/* ✅ redirect to products page */}
+                <button
+                  onClick={() => navigate("/product")}
+                  className="bg-gradient-to-r from-red-500 to-purple-500 text-white px-3 py-2 rounded-md cursor-pointer mt-2"
+                >
                   Shop Now
                 </button>
               </div>
